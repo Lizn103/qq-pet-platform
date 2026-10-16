@@ -66,3 +66,11 @@
   [ ] 域名续费或换域名重配（10-28前）
   [ ] 两个网址(pet/mengka.jwerw.work)在新管理员手机能打开
 ========================================================
+> 🔑 **真实令牌获取（本文件占位符对应）**：
+> 完整明文敏感清单（含全部可用密码/令牌）存放在**私有仓库**：
+> **https://github.com/Lizn103/qq-pet-keys/blob/main/SENSITIVE-INFO.txt**
+> （本账号登录后即可打开，直接复制使用）
+>
+> 私有仓库丢失时，令牌可在线重建：
+> - Cloudflare 令牌：dash.cloudflare.com → My Profile → API Tokens
+> - GitHub 令牌：github.com/settings/tokens（原令牌建议直接撤销重建）
