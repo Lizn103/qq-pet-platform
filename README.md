@@ -4,6 +4,7 @@
 
 
 > 📦 **组件来源说明见 [docs/SOURCES.md](docs/SOURCES.md)**（每个文件来自哪个仓库）
+> 🔧 **运维手册（新管理员无障碍上手）见 [docs/OPERATIONS.md](docs/OPERATIONS.md)** —— 含系统全景/账号清单/换账号/换域名/迁移/敏感信息交接
 ## 📚 使用教程 / Tutorials
 
 | 教程 | 说明 |
