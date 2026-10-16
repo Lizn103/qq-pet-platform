@@ -18,6 +18,7 @@
 | [07 萌卡NT手册](docs/tutorials/07-mengka-guide-ch.md) | 账号管理/插件服务 |
 | [08 常见问题](docs/tutorials/08-troubleshooting-ch.md) | FAQ排障 |
 | [10 固定网址与域名到期](docs/tutorials/10-domain-fixed-url-ch.md) | Cloudflare隧道/域名续费换域名 |
+| [11 换机器部署](docs/tutorials/11-new-machine-deploy-ch.md) | 新设备一键恢复到能用 |
 
 ## Features 功能特性
 
