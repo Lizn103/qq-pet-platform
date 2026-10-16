@@ -175,3 +175,24 @@ Copy-Item 'C:\mengka-nt\data\config.db' "C:\backup\mengka-$(Get-Date -Format yyy
 | 萌卡更新通道 | 仅 GitHub Releases（Carlor-Official/Mengka-NT）；自动更新已开启 |
 
 平台源码/教程仓库：**github.com/Lizn103/qq-pet-platform**
+
+---
+
+## 10. 敏感信息交接（重要）
+
+完整密码/令牌**不写在此公开仓库**，统一存放在本机文件：
+
+**`C:\\QQ pet\\SENSITIVE-INFO.txt`**
+
+交接时执行：
+1. 把该文件复制给新管理员（U盘/加密聊天/当面）
+2. 逐项核对第 7 节账号清单：每个账号在新人手里能登录
+3. 交接后**建议立即轮换**：
+   - GitHub 令牌（撤销重建）
+   - Cloudflare 令牌（删除重建）
+   - 平台 admin 密码（改密后更新 admin_init.txt）
+   - 萌卡 anadmin 密码、插件令牌（萌卡 WebUI 改）
+   - QQ 机器人 secret 不变即可（appid 固定）
+4. 若更换域名/Cloudflare 账号，按第 6-A 节重配，并在 SENSITIVE-INFO.txt 同步更新
+
+> 🔒 安全底线：SENSITIVE-INFO.txt 含全部权限，只给下一任管理员本人；公开渠道（QQ群/网盘公开链接/GitHub）一律不发。
