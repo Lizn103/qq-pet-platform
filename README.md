@@ -16,6 +16,7 @@
 | [06 管理端手册](docs/tutorials/06-admin-guide-ch.md) | 用户/套餐/卡密/节点配置 |
 | [07 萌卡NT手册](docs/tutorials/07-mengka-guide-ch.md) | 账号管理/插件服务 |
 | [08 常见问题](docs/tutorials/08-troubleshooting-ch.md) | FAQ排障 |
+| [10 固定网址与域名到期](docs/tutorials/10-domain-fixed-url-ch.md) | Cloudflare隧道/域名续费换域名 |
 
 ## Features 功能特性
 
