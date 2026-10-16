@@ -2,6 +2,19 @@
 
 > A web-based platform for managing QQ pets with automatic care, battles, and community features.
 
+## 📚 使用教程 / Tutorials
+
+| 教程 | 说明 |
+|------|------|
+| [01 快速上手](docs/tutorials/01-quickstart-ch.md) | 注册、绑定QQ、开始养宠 |
+| [02 宠物养护](docs/tutorials/02-pet-care-ch.md) | 喂养/洗澡/互动 |
+| [03 活动](docs/tutorials/03-activities-ch.md) | 学习/打工/冒险 |
+| [04 好友与PK](docs/tutorials/04-friends-pk-ch.md) | 好友互动/宠物PK/自动PK |
+| [05 自动托管与钱包](docs/tutorials/05-auto-control-wallet-ch.md) | 自动喂养/卡密兑换 |
+| [06 管理端手册](docs/tutorials/06-admin-guide-ch.md) | 用户/套餐/卡密/节点配置 |
+| [07 萌卡NT手册](docs/tutorials/07-mengka-guide-ch.md) | 账号管理/插件服务 |
+| [08 常见问题](docs/tutorials/08-troubleshooting-ch.md) | FAQ排障 |
+
 ## Features 功能特性
 
 - **User Management** / 用户管理: Registration, login, session recovery, password change
