@@ -1,230 +1,99 @@
-# QQ Pet
+# QQ Pet Platform - QQ宠物管理平台
 
-一个面向 QQ 宠物的 Web 管理平台。项目提供用户与钱包体系、QQ 账号接入、宠物资料与互动、自动托管、自动 PK，以及配套的后台管理能力。
+> A web-based platform for managing QQ pets with automatic care, battles, and community features.
 
-本系统的 QQ 宠物接入后台框架为 [萌卡 NT（Mengka-NT）](https://mknt.net/)，通过其节点与接口提供相关能力；本仓库实现独立的 Go 管理服务和 Vue 前端，需要配置可用的萌卡 NT 服务才能使用相关功能。
+## Features 功能特性
 
-> [!IMPORTANT]
-> 本项目仍在持续开发中，接口和数据结构可能发生变化。涉及 QQ 账号、Token、Cookie 等敏感信息时，请仅在可信环境中部署，并在使用前自行评估风险。
+- **User Management** / 用户管理: Registration, login, session recovery, password change
+- **Wallet System** / 钱包系统: Independent gold wallet, transfer history, redeem code exchange
+- **QQ Account Integration** / QQ账号接入: Add/manage QQ accounts via MengkaNT framework
+- **Pet Care** / 宠物养护: Feed, bathe, interact, study, work, adventure
+- **Auto-Control** / 自动托管: Scheduled auto-feed, auto-bathe, auto-interact
+- **PK Battles** / 自动PK: Strategy cache, opponent matching, auto-PK scheduler
+- **Ranking** / 战力排行: Global rankings, daily stats tracking
+- **Admin Panel** / 管理后台: User management, role assignment, wallet adjustments
+- **MQTT Plugin Support** / 插件支持: MengkaNT WebSocket plugin integration
 
-## 功能概览
+## Architecture 架构
 
-### 用户端
-
-- 注册、登录、退出、会话恢复和密码修改
-- 独立金币钱包、转账记录、卡密兑换
-- QQ 账号添加、登录、续期和安全验证
-- 宠物资料、属性、每日统计和战力排行
-- 喂养、洗澡、互动、学习、工作和冒险
-- 好友列表、好友宠物资料和互动
-- 宠物 PK、对手缓存及自动 PK
-- 自动喂养、自动洗澡、自动互动和计划任务
-- 公告、操作状态和执行日志
-
-### 管理端
-
-- 用户、角色、状态和钱包管理
-- 注册配置、系统设置和审计日志
-- QQ 套餐、QQ 绑定与服务期限管理
-- 卡密生成、查询和统计
-- 公告与陌生宠物数据管理
-- 萌卡/机器人节点配置、连接状态和 WebSocket 调试
-- 官方机器人推送配置
-
-## 项目架构
-
-```mermaid
-flowchart LR
-    B[浏览器] -->|HTTP / WebSocket| F[Vue 3 前端]
-    F -->|REST API / 反向代理| S[Go 服务端]
-    S -->|database/sql| D[(SQLite)]
-    S -->|WebSocket / API| M[萌卡 NT 节点]
-    S -->|通知| Q[QQ 官方机器人]
+```
+Browser ──HTTP/WebSocket──> Vue Frontend ──API──> Go Backend ──WS──> MengkaNT Plugin
+                                                                    ↕
+                                                              QQ Official API
 ```
 
-项目采用前后端分离的单仓库结构。发布版本中的 `qq-pet-frontend` 是一个轻量 Go 启动器：它内嵌 Vue 构建产物，并将 `/api`、`/healthz` 和 `/ws` 请求反向代理到服务端。
+### Tech Stack 技术栈
 
-## 技术栈
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | Vue 3 + TypeScript + Vite + Element Plus + Pinia |
+| **Backend** | Go (Chi router) + SQLite (modernc.org/sqlite) |
+| **Auth** | HttpOnly Cookie Sessions + bcrypt |
+| **WebSocket** | Gorilla WebSocket (MengkaNT plugin communication) |
+| **Deployment** | Windows Installer (nssm services) + Docker (optional) |
 
-| 模块 | 技术 |
-| --- | --- |
-| 服务端 | Go、Chi、`database/sql` |
-| 数据库 | SQLite（`modernc.org/sqlite`，无需 CGO） |
-| 鉴权 | HttpOnly Cookie Session、bcrypt |
-| 实时通信 | Gorilla WebSocket |
-| 前端 | Vue 3、TypeScript、Vite |
-| UI 与状态 | Element Plus、Pinia、Vue Router |
-| 其他 | QRCode、UUID |
+## Quick Start 快速开始
 
-## 目录结构
+### Prerequisites 环境要求
+- Go 1.26+
+- Node.js 20+ / npm
 
-```text
-qq-pet/
-├─ backend/
-│  ├─ cmd/server/                 # 服务端入口
-│  ├─ internal/
-│  │  ├─ admin/                   # 后台管理业务
-│  │  ├─ announcement/            # 公告业务
-│  │  ├─ auth/                    # 认证、会话与权限
-│  │  ├─ autocontrol/             # 宠物自动托管调度器
-│  │  ├─ autopk/                  # 自动 PK 调度器
-│  │  ├─ config/                  # 服务配置
-│  │  ├─ database/                # SQLite 连接与迁移
-│  │  ├─ logstream/               # 实时日志推送
-│  │  ├─ mokant/                  # 萌卡兼容节点适配层
-│  │  ├─ officialbot/             # QQ 官方机器人通知
-│  │  ├─ response/                # 统一 API 响应
-│  │  ├─ server/                  # HTTP 路由与业务接口
-│  │  ├─ timeutil/                # 时间工具
-│  │  └─ wallet/                  # 钱包与金币流水
-│  └─ data/                       # 运行时数据库（不要提交）
-├─ frontend/
-│  ├─ public/                     # 静态资源与验证页面
-│  ├─ src/
-│  │  ├─ api/                     # API 请求封装
-│  │  ├─ components/              # 公共组件
-│  │  ├─ layouts/                 # 用户端、管理端和认证布局
-│  │  ├─ router/                  # 前端路由
-│  │  ├─ stores/                  # Pinia 状态
-│  │  └─ views/                   # 用户端与管理端页面
-│  ├─ main.go                     # 静态资源服务器与反向代理
-│  ├─ package.json
-│  └─ vite.config.ts
-├─ .gitignore
-└─ README.md
+### Backend Setup 后端设置
+```bash
+cd backend/cmd/server
+go run .
+# Follow prompts to set port, admin username/password on first run
 ```
 
-## 环境要求
-
-- Go 1.26 或更高版本
-- Node.js 20.19+ 或 22.12+
-- npm
-
-## 从源码运行
-
-### 1. 启动服务端
-
-```powershell
-cd backend
-go mod download
-go run ./cmd/server
-```
-
-首次启动时，程序会依次要求输入：
-
-1. 服务端监听端口（建议填写 `2345`，与前端默认配置一致）
-2. 初始管理员用户名
-3. 初始管理员密码
-
-配置会保存到 `backend/data/qq-pet.db`。后续启动将直接读取数据库，不再重复询问。
-
-### 2. 启动前端开发服务器
-
-```powershell
+### Frontend Development 前端开发
+```bash
 cd frontend
-npm ci
+npm install
 npm run dev
 ```
 
-浏览器访问 `http://127.0.0.1:5173`。
+## Project Structure 项目结构
 
-当前 `frontend/vite.config.ts` 中的开发代理默认指向本机 `2345` 端口：
-
-```ts
-proxy: {
-  '/api': { target: 'http://127.0.0.1:2345', changeOrigin: true },
-  '/healthz': { target: 'http://127.0.0.1:2345', changeOrigin: true },
-  '/ws': { target: 'ws://127.0.0.1:2345', changeOrigin: true, ws: true },
-}
+```
+memgke-qq-pet/
+├── backend/           # Go backend service
+│   ├── cmd/server/    # Entry point
+│   └── internal/      # Business logic (auth, mokant, wallet, etc.)
+├── frontend/          # Vue 3 frontend + embedded Go static server
+│   ├── src/
+│   │   ├── api/       # API request modules (auth, qq, admin, etc.)
+│   │   ├── views/     # Page components (admin/, user/, auth/)
+│   │   ├── stores/    # Pinia state stores
+│   │   └── ...
+│   └── public/        # Static assets (captcha pages)
+├── deploy/            # Windows installer & service scripts
+├── scripts/           # Build & utility scripts
+├── docs/              # Documentation
+├── data/              # External data files (PK strangers list, etc.)
+└── .gitignore         # Excluded files (secrets, build artifacts)
 ```
 
-## 运行发布版
+## Deployment 部署
 
-请分别打开两个终端，先启动服务端，再启动前端。以下示例假设服务端端口为 `2345`：
+### Windows Service (Recommended 推荐)
+Use `deploy/windows-installer.iss` with Inno Setup to create an installer that:
+- Installs both backend and frontend executables
+- Registers as Windows Services via NSSM
+- Creates start menu shortcuts
 
-```powershell
-# 终端 1
-./qq-pet-server.exe
+See `docs/install-guide.md` for full instructions.
 
-# 终端 2
-$env:FRONTEND_PORT = "5173"
-$env:NO_OPEN = "0"
-./qq-pet-frontend.exe
-```
-
-前端启动器支持以下环境变量：
-
-| 变量 | 默认值 | 说明 |
-| --- | --- | --- |
-| `BACKEND_URL` | `http://127.0.0.1:2345` | 服务端地址 |
-| `FRONTEND_HOST` | `127.0.0.1` | 前端监听地址；如需局域网访问可显式设为 `0.0.0.0` |
-| `FRONTEND_PORT` | `5173` | 前端监听端口 |
-| `NO_OPEN` | `1` | 设为非 `1` 时尝试自动打开浏览器 |
-
-> [!NOTE]
-> SQLite 文件按服务端的当前工作目录写入 `./data/qq-pet.db`。请从固定目录启动服务端，并定期备份 `data` 目录。
-
-## 构建
-
-构建服务端：
-
-```powershell
-cd backend
-go build -trimpath -o qq-pet-server.exe ./cmd/server
-```
-
-构建前端及其启动器：
-
-```powershell
-cd frontend
-npm ci
-npm run build
-go build -trimpath -ldflags "-s -w -X main.version=1.0.1" -o qq-pet-frontend.exe .
-```
-
-交叉编译时可按目标平台设置 `GOOS` 和 `GOARCH`。SQLite 驱动不依赖 CGO。
-
-## Docker 部署
-
-Docker Compose 会启动后端 API 和前端服务，SQLite 数据保存在 `qq-pet-data` 命名卷中。先复制配置模板并修改管理员密码：
-
-```powershell
-Copy-Item .env.docker.example .env
-# 编辑 .env，至少修改 ADMIN_PASSWORD
+### Docker
+```bash
 docker compose up -d --build
 ```
+Access at http://localhost:5173
 
-启动后访问 `http://localhost:5173`。后端 API 默认映射到 `http://localhost:2345`。停止服务：
+## Security 安全须知
+⚠️ Never commit `config.ini`, tokens, or database files. The `.gitignore` excludes these automatically.
 
-```powershell
-docker compose down
-```
+## License 许可
+MIT — see [LICENSE](LICENSE)
 
-`pet-pk-strangers.txt` 位于仓库根目录，可按项目需要导入陌生人宠物数据。
-
-## 测试与检查
-
-```powershell
-cd backend
-go test ./...
-
-cd ../frontend
-npm run build
-```
-
-后端测试覆盖认证、数据库迁移、钱包、服务端接口、自动托管和自动 PK 等核心模块；前端目前以 TypeScript 类型检查和生产构建作为基础检查。
-
-
-## 致谢与项目关系
-
-本系统的 QQ 宠物后台接入基于 [萌卡 NT（Mengka-NT）](https://mknt.net/)；其[开源项目](https://github.com/Carlor-Official/Mengka-NT)提供了相关接口与节点能力。感谢原项目作者及贡献者的探索与开源分享。
-
-本仓库的管理服务和前端为独立实现，并非萌卡 NT 官方项目或官方分支。使用、修改或分发相关项目内容时，请分别遵守各自仓库的开源许可证；“QQ”等名称及相关商标归其权利人所有。
-
-## 免责声明
-
-本项目仅供学习、研究和技术交流使用，不提供任何可用性、稳定性或账号安全保证。使用者应自行承担部署和使用风险，并遵守所在地法律法规及相关平台服务协议。请勿将本项目用于破坏服务、侵犯他人权益或其他违法违规用途。
-
-## 开源许可
-
-本项目采用 [MIT License](LICENSE) 开源。你可以将本项目用于商业用途，也可以使用、复制、修改、合并、发布、分发、再许可或销售本项目的副本，但必须保留原始版权声明和许可声明。
+---
+Built with ❤️ for QQ Pet enthusiasts
