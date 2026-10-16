@@ -1,0 +1,22 @@
+# MengkaNT 容器镜像（Zeabur/PaaS 用）
+# 用法: docker build -f cloud/Dockerfile.mengka -t mengka:latest .
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+# 萌卡 NT v2.7.2 Linux amd64（官方 GitHub Release）
+WORKDIR /opt
+RUN curl -fsSL -o mengka.tar.gz \
+      https://github.com/Carlor-Official/Mengka-NT/releases/download/v2.7.2/mengka-nt-2.7.2-linux-amd64.tar.gz \
+    && tar xzf mengka.tar.gz -C /opt/mengka --strip-components=1 \
+    && rm mengka.tar.gz \
+    && chmod +x /opt/mengka/mengka-nt
+
+VOLUME ["/opt/mengka/data"]
+EXPOSE 7878 7879
+
+WORKDIR /opt/mengka
+CMD ["./mengka-nt"]
