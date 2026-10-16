@@ -2,6 +2,8 @@
 
 > A web-based platform for managing QQ pets with automatic care, battles, and community features.
 
+
+> 📦 **组件来源说明见 [docs/SOURCES.md](docs/SOURCES.md)**（每个文件来自哪个仓库）
 ## 📚 使用教程 / Tutorials
 
 | 教程 | 说明 |
