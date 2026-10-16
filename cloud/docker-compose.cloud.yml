@@ -1,0 +1,54 @@
+# QQ宠物 + 萌卡NT 云端部署（Zeabur / Docker Compose 通用）
+# 平台自带 Dockerfile（backend+frontend），萌卡用 cloud/Dockerfile.mengka
+# 数据卷持久化登录态与数据库
+services:
+  mengka:
+    build:
+      context: .
+      dockerfile: cloud/Dockerfile.mengka
+    volumes:
+      - mengka-data:/opt/mengka/data
+    ports:
+      - "7878:7878"
+      - "7879:7879"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    environment:
+      APP_ADDR: ":2345"
+      APP_ENV: production
+      DATABASE_PATH: /app/data/qq-pet.db
+      FRONTEND_ORIGIN: https://pet.jwerw.work
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: QqPet_v8OXGzyw5IUN
+    volumes:
+      - qq-pet-data:/app/data
+    ports:
+      - "2345:2345"
+    restart: unless-stopped
+    depends_on:
+      - mengka
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend
+    environment:
+      BACKEND_URL: http://backend:2345
+      FRONTEND_HOST: 0.0.0.0
+      FRONTEND_PORT: 5173
+      NO_OPEN: "1"
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+volumes:
+  mengka-data:
+  qq-pet-data:
