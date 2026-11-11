@@ -50,3 +50,10 @@ Thumbs.db
 # Temporary
 tmp/
 .cache/
+
+# 运行产物（沙箱部署生成，不入库）
+bin/
+cloudflared
+mengka-nt/
+data/qq-pet.db
+*.log
